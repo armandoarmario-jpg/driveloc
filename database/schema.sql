@@ -28,6 +28,7 @@ CREATE TABLE carro (
     carroceria ENUM('sedan', 'hatch', 'suv', 'pickup', 'coupe', 'conversivel', 'minivan', 'perua') NOT NULL,
     preco DECIMAL(11, 2) NOT NULL,
     descricao TEXT,
+    image_path VARCHAR(255),
     cidade VARCHAR(100) NOT NULL,
     estado CHAR(2) NOT NULL,
     status ENUM('ativo', 'inativo', 'vendido') NOT NULL DEFAULT 'ativo',

@@ -53,25 +53,25 @@ $carrocerias = ['sedan' => 'Sedã', 'hatch' => 'Hatch', 'suv' => 'SUV', 'pickup'
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo - DriveLoc</title>
-    <link rel="stylesheet" href="/assets/style.css">
+    <link rel="stylesheet" href="<?= url('assets/css/style.css') ?>">
 </head>
 <body>
     <header>
-        <a href="/index.php" class="logo">DriveLoc</a>
+        <a href="<?= url('index.php') ?>" class="logo">DriveLoc</a>
         <nav>
-            <a href="/index.php">Catálogo</a>
+            <a href="<?= url('index.php') ?>">Catálogo</a>
             <?php if (isset($_SESSION['user_id'])): ?>
-                <a href="/meus-favoritos.php">Meus Favoritos</a>
+                <a href="<?= url('meus-favoritos.php') ?>">Meus Favoritos</a>
                 <div class="user-info">
                     <span><?= htmlspecialchars($_SESSION['user_nome']) ?></span>
                     <?php if ($_SESSION['user_tipo'] === 'admin'): ?>
-                        <a href="/admin/dashboard.php">Painel Admin</a>
+                        <a href="<?= url('admin/dashboard.php') ?>">Painel Admin</a>
                     <?php endif; ?>
-                    <a href="/logout.php">Sair</a>
+                    <a href="<?= url('logout.php') ?>">Sair</a>
                 </div>
             <?php else: ?>
-                <a href="/login.php">Entrar</a>
-                <a href="/cadastro.php">Cadastrar</a>
+                <a href="<?= url('login.php') ?>">Entrar</a>
+                <a href="<?= url('cadastro.php') ?>">Cadastrar</a>
             <?php endif; ?>
         </nav>
     </header>
@@ -122,7 +122,7 @@ $carrocerias = ['sedan' => 'Sedã', 'hatch' => 'Hatch', 'suv' => 'SUV', 'pickup'
                 </div>
                 <div class="filter-buttons">
                     <button type="submit" class="btn btn-primary">Filtrar</button>
-                    <a href="/index.php" class="btn btn-secondary">Limpar</a>
+                    <a href="<?= url('index.php') ?>" class="btn btn-secondary">Limpar</a>
                 </div>
             </form>
         </div>
@@ -133,6 +133,9 @@ $carrocerias = ['sedan' => 'Sedã', 'hatch' => 'Hatch', 'suv' => 'SUV', 'pickup'
             <div class="car-grid">
                 <?php foreach ($carros as $c): ?>
                     <div class="car-card">
+                        <?php if (!empty($c['image_path'])): ?>
+                            <img src="<?= url($c['image_path']) ?>" alt="<?= htmlspecialchars($c['marca'] . ' ' . $c['modelo']) ?>" class="car-image">
+                        <?php endif; ?>
                         <div class="placa"><?= htmlspecialchars($c['placa']) ?></div>
                         <div class="marca-modelo"><?= htmlspecialchars($c['marca']) ?> <?= htmlspecialchars($c['modelo']) ?></div>
                         <div class="ano-cor"><?= $c['ano_fabricacao'] ?> / <?= $c['ano_modelo'] ?> &mdash; <?= htmlspecialchars($c['cor']) ?></div>
@@ -147,7 +150,7 @@ $carrocerias = ['sedan' => 'Sedã', 'hatch' => 'Hatch', 'suv' => 'SUV', 'pickup'
                         <div class="preco">R$ <?= number_format($c['preco'], 2, ',', '.') ?></div>
                         <div class="actions">
                             <?php if (isset($_SESSION['user_id'])): ?>
-                                <form method="POST" action="/favoritar.php">
+                                <form method="POST" action="<?= url('favoritar.php') ?>">
                                     <input type="hidden" name="carro_id" value="<?= $c['id'] ?>">
                                     <button type="submit" class="btn-favoritar <?= in_array($c['id'], $favoritos) ? 'favoritado' : '' ?>">
                                         <?= in_array($c['id'], $favoritos) ? '❤️ Favoritado' : '🤍 Favoritar' ?>

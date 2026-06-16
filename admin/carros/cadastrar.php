@@ -31,19 +31,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $estado = $_POST['estado'] ?? '';
     $usuario_id = (int) ($_POST['usuario_id'] ?? 0);
     $descricao = trim($_POST['descricao'] ?? '');
+    $imagem_path = null;
 
     if (!$placa || !$marca || !$modelo || !$ano_fabricacao || !$preco || !$cidade || !$estado || !$usuario_id) {
         $erro = 'Preencha todos os campos obrigatórios.';
     } else {
-        $stmt = db()->prepare("SELECT id FROM carro WHERE placa = ?");
-        $stmt->execute([$placa]);
-        if ($stmt->fetch()) {
-            $erro = 'Esta placa já está cadastrada.';
-        } else {
-            $stmt = db()->prepare("INSERT INTO carro (placa, marca, modelo, ano_fabricacao, ano_modelo, cor, combustivel, quilometragem, cambio, portas, carroceria, preco, descricao, cidade, estado, usuario_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$placa, $marca, $modelo, $ano_fabricacao, $ano_modelo, $cor, $combustivel, $quilometragem, $cambio, $portas, $carroceria, $preco, $descricao, $cidade, $estado, $usuario_id]);
-            $sucesso = 'Carro cadastrado com sucesso!';
-            $_POST = [];
+        if (!empty($_FILES['imagem']['name'])) {
+            if ($_FILES['imagem']['error'] !== UPLOAD_ERR_OK) {
+                $erro = 'Erro ao enviar a imagem.';
+            } else {
+                $fileType = mime_content_type($_FILES['imagem']['tmp_name']);
+                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                if (!in_array($fileType, $allowedTypes, true)) {
+                    $erro = 'Formato de imagem inválido. Use JPG, PNG ou GIF.';
+                } elseif ($_FILES['imagem']['size'] > 2 * 1024 * 1024) {
+                    $erro = 'A imagem deve ter no máximo 2MB.';
+                } else {
+                    $ext = strtolower(pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION));
+                    $filename = uniqid('car_', true) . '.' . $ext;
+                    $destination = upload_path('cars/' . $filename);
+                    if (!is_dir(dirname($destination))) {
+                        mkdir(dirname($destination), 0755, true);
+                    }
+                    if (!move_uploaded_file($_FILES['imagem']['tmp_name'], $destination)) {
+                        $erro = 'Falha ao salvar a imagem.';
+                    } else {
+                        $imagem_path = 'uploads/cars/' . $filename;
+                    }
+                }
+            }
+        }
+
+        if (!$erro) {
+            $stmt = db()->prepare("SELECT id FROM carro WHERE placa = ?");
+            $stmt->execute([$placa]);
+            if ($stmt->fetch()) {
+                $erro = 'Esta placa já está cadastrada.';
+            } else {
+                $stmt = db()->prepare("INSERT INTO carro (placa, marca, modelo, ano_fabricacao, ano_modelo, cor, combustivel, quilometragem, cambio, portas, carroceria, preco, descricao, image_path, cidade, estado, usuario_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->execute([$placa, $marca, $modelo, $ano_fabricacao, $ano_modelo, $cor, $combustivel, $quilometragem, $cambio, $portas, $carroceria, $preco, $descricao, $imagem_path, $cidade, $estado, $usuario_id]);
+                $sucesso = 'Carro cadastrado com sucesso!';
+                $_POST = [];
+            }
         }
     }
 }
@@ -85,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <div style="background:#fff;border-radius:8px;padding:25px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
                 <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:15px;">
                     <div class="form-group">
                         <label for="placa">Placa *</label>
@@ -182,8 +211,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="descricao">Descrição</label>
                     <textarea name="descricao" id="descricao"><?= htmlspecialchars($_POST['descricao'] ?? '') ?></textarea>
                 </div>
+                <div class="form-group">
+                    <label for="imagem">Imagem do Carro</label>
+                    <input type="file" name="imagem" id="imagem" accept="image/jpeg,image/png,image/gif">
+                    <small>Somente JPG, PNG ou GIF. Máx. 2MB.</small>
+                </div>
                 <button type="submit" class="btn btn-success">Cadastrar Carro</button>
-                <a href="/admin/carros/listar.php" class="btn btn-secondary">Cancelar</a>
+                <a href="<?= url('admin/carros/listar.php') ?>" class="btn btn-secondary">Cancelar</a>
             </form>
         </div>
     </div>

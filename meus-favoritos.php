@@ -20,20 +20,20 @@ $carrocerias = ['sedan' => 'Sedã', 'hatch' => 'Hatch', 'suv' => 'SUV', 'pickup'
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meus Favoritos - DriveLoc</title>
-    <link rel="stylesheet" href="/assets/style.css">
+    <link rel="stylesheet" href="<?= url('assets/css/style.css') ?>">
 </head>
 <body>
     <header>
-        <a href="/index.php" class="logo">DriveLoc</a>
+        <a href="<?= url('index.php') ?>" class="logo">DriveLoc</a>
         <nav>
-            <a href="/index.php">Catálogo</a>
-            <a href="/meus-favoritos.php">Meus Favoritos</a>
+            <a href="<?= url('index.php') ?>">Catálogo</a>
+            <a href="<?= url('meus-favoritos.php') ?>">Meus Favoritos</a>
             <div class="user-info">
                 <span><?= htmlspecialchars($_SESSION['user_nome']) ?></span>
                 <?php if ($_SESSION['user_tipo'] === 'admin'): ?>
-                    <a href="/admin/dashboard.php">Painel Admin</a>
+                    <a href="<?= url('admin/dashboard.php') ?>">Painel Admin</a>
                 <?php endif; ?>
-                <a href="/logout.php">Sair</a>
+                <a href="<?= url('logout.php') ?>">Sair</a>
             </div>
         </nav>
     </header>
@@ -60,7 +60,7 @@ $carrocerias = ['sedan' => 'Sedã', 'hatch' => 'Hatch', 'suv' => 'SUV', 'pickup'
                         <div class="cidade">📍 <?= htmlspecialchars($c['cidade']) ?>/<?= $c['estado'] ?></div>
                         <div class="preco">R$ <?= number_format($c['preco'], 2, ',', '.') ?></div>
                         <div class="actions">
-                            <form method="POST" action="/favoritar.php">
+                            <form method="POST" action="<?= url('favoritar.php') ?>">
                                 <input type="hidden" name="carro_id" value="<?= $c['id'] ?>">
                                 <button type="submit" class="btn-favoritar favoritado">❤️ Remover dos Favoritos</button>
                             </form>

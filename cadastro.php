@@ -39,15 +39,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro - DriveLoc</title>
-    <link rel="stylesheet" href="/assets/style.css">
+    <link rel="stylesheet" href="<?= url('assets/css/style.css') ?>">
 </head>
 <body>
     <header>
-        <a href="/index.php" class="logo">DriveLoc</a>
+        <a href="<?= url('index.php') ?>" class="logo">DriveLoc</a>
         <nav>
-            <a href="/index.php">Catálogo</a>
-            <a href="/login.php">Entrar</a>
-            <a href="/cadastro.php">Cadastrar</a>
+            <a href="<?= url('index.php') ?>">Catálogo</a>
+            <a href="<?= url('login.php') ?>">Entrar</a>
+            <a href="<?= url('cadastro.php') ?>">Cadastrar</a>
         </nav>
     </header>
 
@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit" class="btn btn-success">Cadastrar</button>
         </form>
         <div class="auth-links">
-            Já tem conta? <a href="/login.php">Faça login</a>
+            Já tem conta? <a href="<?= url('login.php') ?>">Faça login</a>
         </div>
     </div>
 </body>

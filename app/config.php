@@ -15,6 +15,8 @@ try {
 }
 
 define('BASE_URL', '/driveloc');
+define('UPLOAD_DIR', __DIR__ . '/../uploads');
+define('UPLOAD_URL', BASE_URL . '/uploads');
 
 function db() {
     global $pdo;
@@ -24,4 +26,14 @@ function db() {
 function url(string $path = ''): string {
     $path = ltrim($path, '/');
     return BASE_URL . ($path !== '' ? '/' . $path : '');
+}
+
+function upload_path(string $path = ''): string {
+    $path = ltrim($path, '/\\');
+    return rtrim(UPLOAD_DIR, DIRECTORY_SEPARATOR) . ($path !== '' ? DIRECTORY_SEPARATOR . $path : '');
+}
+
+function upload_url(string $path = ''): string {
+    $path = ltrim($path, '/\\');
+    return UPLOAD_URL . ($path !== '' ? '/' . $path : '');
 }

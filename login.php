@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_nome'] = $user['nome'];
                 $_SESSION['user_tipo'] = $user['tipo'];
-                header('Location: /index.php');
+                header('Location: ' . url('index.php'));
                 exit;
             } else {
                 $erro = 'Usuário inativo. Contate o administrador.';
@@ -36,15 +36,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - DriveLoc</title>
-    <link rel="stylesheet" href="/assets/style.css">
+    <link rel="stylesheet" href="<?= url('assets/css/style.css') ?>">
 </head>
 <body>
     <header>
-        <a href="/index.php" class="logo">DriveLoc</a>
+        <a href="<?= url('index.php') ?>" class="logo">DriveLoc</a>
         <nav>
-            <a href="/index.php">Catálogo</a>
-            <a href="/login.php">Entrar</a>
-            <a href="/cadastro.php">Cadastrar</a>
+            <a href="<?= url('index.php') ?>">Catálogo</a>
+            <a href="<?= url('login.php') ?>">Entrar</a>
+            <a href="<?= url('cadastro.php') ?>">Cadastrar</a>
         </nav>
     </header>
 
@@ -65,8 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit" class="btn btn-primary">Entrar</button>
         </form>
         <div class="auth-links">
-            <a href="/cadastro.php">Criar conta</a> &bull;
-            <a href="/admin/index.php">Área do Admin</a>
+            <a href="<?= url('cadastro.php') ?>">Criar conta</a> &bull;
+            <a href="<?= url('admin/index.php') ?>">Área do Admin</a>
         </div>
     </div>
 </body>
